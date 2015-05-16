@@ -1,8 +1,7 @@
-/// Cube with one color per vertex
 
-function Sphere () 
+function Sphere (gl) 
 {
-	// Vertex positions
+	this.gl = gl;
 	
 	var vertices_s = [];
 	var colors_s = [];
@@ -56,39 +55,39 @@ function Sphere ()
 		}
 	}
 	
-	this.vertexBuffer = gl.createBuffer();
-	gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexBuffer );
-	gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices_s), gl.STATIC_DRAW);
+	this.vertexBuffer = this.gl.createBuffer();
+	this.gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexBuffer );
+	this.gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices_s), this.gl.STATIC_DRAW);
 	this.vertexBuffer.itemSize = 3;
 	this.vertexBuffer.numItems = 32*32;
 		
-	this.uvBuffer = gl.createBuffer();
-  	gl.bindBuffer(gl.ARRAY_BUFFER, this.uvBuffer);
-  	gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(tex_s), gl.STATIC_DRAW);
+	this.uvBuffer = this.gl.createBuffer();
+  	this.gl.bindBuffer(gl.ARRAY_BUFFER, this.uvBuffer);
+  	this.gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(tex_s), this.gl.STATIC_DRAW);
   	this.uvBuffer.itemSize = 2;
 	this.uvBuffer.numItems = 32*32;
 	
 	// Triangles
 	this.triangles = gl.createBuffer();
-	gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.triangles);
-	gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(tri_s), gl.STATIC_DRAW);
+	this.gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.triangles);
+	this.gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(tri_s), this.gl.STATIC_DRAW);
     this.triangles.numItems = 31*31*2*3;
 }
 
 Sphere.prototype.draw = function( shaderPgm )
-{
+{	
 	// Vertex positions 
-	gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexBuffer);
-	gl.vertexAttribPointer(shaderPgm.vertexPositionAttribute, this.vertexBuffer.itemSize, gl.FLOAT, false, 0, 0);
+	this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.vertexBuffer);
+	this.gl.vertexAttribPointer(shaderPgm.vertexPositionAttribute, this.vertexBuffer.itemSize, this.gl.FLOAT, false, 0, 0);
 
 
-  	gl.bindBuffer(gl.ARRAY_BUFFER, this.uvBuffer);
-  	gl.vertexAttribPointer(shaderPgm.textureCoordAttribute, 2, gl.FLOAT, false, 0, 0);
+  	this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.uvBuffer);
+  	this.gl.vertexAttribPointer(shaderPgm.textureCoordAttribute, 2, this.gl.FLOAT, false, 0, 0);
 
 	
 	// Draw elements
-	gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.triangles);
-	gl.drawElements(gl.TRIANGLES, this.triangles.numItems, gl.UNSIGNED_SHORT, 0);
+	this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, this.triangles);
+	this.gl.drawElements(this.gl.TRIANGLES, this.triangles.numItems, this.gl.UNSIGNED_SHORT, 0);
 }
 
 

@@ -20,6 +20,8 @@
       this.showImageNumberLabel        = true;
       this.alwaysShowNavOnTouchDevices = false;
       this.wrapAround                  = false;
+      this.panoWidth				   = 800;
+      this.panoHeight				   = 600;
     }
     
     // Change to localize to non-english language
@@ -65,7 +67,6 @@
       this.$overlay        = $('#lightboxOverlay');
       this.$outerContainer = this.$lightbox.find('.lb-outerContainer');
       this.$container      = this.$lightbox.find('.lb-container');
-      this.$glcanvas       = $('#pano-canvas');
 
       // Store css values for future lookup
       this.containerTopPadding = parseInt(this.$container.css('padding-top'), 10);
@@ -134,7 +135,7 @@
         return false;
       });
       
-      this.$glcanvas.hide();
+      this.$lightbox.find('.lb-canvas').hide();
     };
 
     // Show overlay and lightbox. If the image is part of a set, add siblings to album array.
@@ -222,8 +223,15 @@
 
         $preloader = $(preloader);
 
+	    if (self.album[imageNumber].panoType != null)
+	    {
+	    	preloader.width = self.options.panoWidth;
+	      	preloader.height = self.options.panoHeight;
+	     }
+
         $image.width(preloader.width);
         $image.height(preloader.height);
+        
         
         if (self.options.fitImagesInViewport) {
           // Fit image inside the viewport.
@@ -270,13 +278,6 @@
       var oldWidth  = this.$outerContainer.outerWidth();
       var oldHeight = this.$outerContainer.outerHeight();
       
-      var pano = this.album[this.currentImageIndex].panoType == "sphere";
-      if (pano)
-      {
-      	imageWidth = 800;
-      	imageHeight = 600;
-      }
-      
       var newWidth  = imageWidth + this.containerLeftPadding + this.containerRightPadding;
       var newHeight = imageHeight + this.containerTopPadding + this.containerBottomPadding;
       
@@ -285,7 +286,7 @@
         self.$lightbox.find('.lb-prevLink').height(newHeight);
         self.$lightbox.find('.lb-nextLink').height(newHeight);
         
-        if (pano)
+        if (self.album[self.currentImageIndex].panoType != null)
       	{
         	self.showPano(imageWidth, imageHeight);
       	}
@@ -322,8 +323,6 @@
 	// Display the image and it's details and begin preload neighboring images.
     Lightbox.prototype.showPano = function(panoWidth, panoHeight) {
       this.$lightbox.find('.lb-loader').hide();      
-      this.$lightbox.find('.lb-canvas').width(panoWidth);
-      this.$lightbox.find('.lb-canvas').height(panoHeight);
       this.$lightbox.find('.lb-canvas').fadeIn('slow');
       
       this.updatePanoNav();
@@ -331,7 +330,19 @@
       this.preloadNeighboringImages();
       this.enableKeyboardNav();
       
-      initPano(this.album[this.currentImageIndex].link, panoWidth, panoHeight);
+      this.$lightbox.find('.lb-canvas')[0].width = panoWidth;
+	  this.$lightbox.find('.lb-canvas')[0].height = panoHeight;
+	      
+      if (this.panoObject == null)
+      {
+	      this.panoObject = new Pano();
+    	  this.panoObject.init(this.$lightbox.find('.lb-canvas')[0]);
+      }
+      this.panoObject.setSize(panoWidth, panoHeight);
+      
+      var $image = this.$lightbox.find('.lb-image');
+      this.panoObject.setImage($image[0]);
+      
     };
 
     // Display previous and next navigation if appropriate.
