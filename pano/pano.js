@@ -9,11 +9,14 @@ function Pano() {
 
 Pano.prototype.init = function(canvas) {	
 	var self = this;
-	
+	this.available = true;
 	try {
 		this.gl = canvas.getContext("experimental-webgl");	// gl = canvas.getContext("webgl");
 		this.setSize(canvas.width, canvas.height);
-	} catch (e) { alert("Could not initialise WebGL"); }
+	} catch (e) { 
+		this.available = false;
+		return;
+	}
 	
 	// global gl-settings
 	this.gl.clearColor(1.0, 0.0, 1.0, 1.0);

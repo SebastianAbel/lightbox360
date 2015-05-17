@@ -227,9 +227,17 @@
 
 	    if (self.album[imageNumber].panoType != null)
 	    {
-	    	preloader.width = self.panoWidth;
-	      	preloader.height = self.panoHeight;
-	     }
+	    	if (self.panoObject == null)
+		    {
+				self.panoObject = new Pano();
+		    	self.panoObject.init(self.$lightbox.find('.lb-canvas').get(0));
+		    }
+		    if (self.panoObject.available)
+		    {
+	    		preloader.width = self.panoWidth;
+	      		preloader.height = self.panoHeight;
+		    }
+	    }
 
         $image.width(preloader.width);
         $image.height(preloader.height);
@@ -288,7 +296,7 @@
         self.$lightbox.find('.lb-prevLink').height(newHeight);
         self.$lightbox.find('.lb-nextLink').height(newHeight);
         
-        if (self.album[self.currentImageIndex].panoType != null)
+        if ((self.album[self.currentImageIndex].panoType != null) && (self.panoObject.available))
       	{
         	self.showPano(imageWidth, imageHeight);
       	}
@@ -335,11 +343,6 @@
       this.$lightbox.find('.lb-canvas').get(0).width = panoWidth;
 	  this.$lightbox.find('.lb-canvas').get(0).height = panoHeight;
 	      
-      if (this.panoObject == null)
-      {
-	      this.panoObject = new Pano();
-    	  this.panoObject.init(this.$lightbox.find('.lb-canvas').get(0));
-      }
       this.panoObject.setSize(panoWidth, panoHeight);
       
       var $image = this.$lightbox.find('.lb-image');
