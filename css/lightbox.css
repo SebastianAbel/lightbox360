@@ -133,7 +133,7 @@ body:after {
   display: block;
 }
 
-.lb-pano_prev, .lb-pano_next {
+.lb-pano_prev, .lb-pano_next, .lb-pano_full {
   height: 100%;
   cursor: pointer;
   display: block;
@@ -153,7 +153,7 @@ body:after {
 }
 
 .lb-pano_nav a.lb-pano_prev {
-  width: 34%;
+  width: 64px;
   left: 0;
   float: left;
   background: url(../img/prev.png) left 48% no-repeat;
@@ -191,7 +191,7 @@ body:after {
 }
 
 .lb-pano_nav a.lb-pano_next {
-  width: 64%;
+  width: 64px;
   right: 0;
   float: right;
   background: url(../img/next.png) right 48% no-repeat;
@@ -209,6 +209,24 @@ body:after {
 }
 
 .lb-pano_nav a.lb-pano_next:hover {
+  filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=100);
+  opacity: 1;
+}
+
+.lb-pano_nav a.lb-pano_full {
+  width: 64px;
+  left: 50%;
+  float: right;
+  background: url(../img/next.png) left 48% no-repeat;
+  filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0);
+  opacity: 0;
+  -webkit-transition: opacity 0.6s;
+  -moz-transition: opacity 0.6s;
+  -o-transition: opacity 0.6s;
+  transition: opacity 0.6s;
+}
+
+.lb-pano_nav a.lb-pano_full:hover {
   filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=100);
   opacity: 1;
 }

@@ -37,8 +37,7 @@ TextureLoader.prototype.handleTextureLoaded = function(image, texture, callback)
 	}
 
 	this.gl.bindTexture(this.gl.TEXTURE_2D, texture);
-	  
-	if (self.iOS)
+	if (this.iOS)
 	{
 		if (!isPowerOfTwo(image.width) || !isPowerOfTwo(image.height)) {
 			// Scale up the texture to the next highest power of two dimensions.
