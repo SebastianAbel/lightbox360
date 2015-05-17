@@ -20,8 +20,6 @@
       this.showImageNumberLabel        = true;
       this.alwaysShowNavOnTouchDevices = false;
       this.wrapAround                  = false;
-      this.panoWidth				   = 800;
-      this.panoHeight				   = 600;
     }
     
     // Change to localize to non-english language
@@ -135,7 +133,11 @@
         return false;
       });
       
-      this.$lightbox.find('.lb-canvas').hide();
+      
+      this.panoWidth = this.$lightbox.find('.lb-canvas').width();
+      this.panoHeight = this.$lightbox.find('.lb-canvas').height();
+      this.$lightbox.find('.lb-canvas').width('auto');
+      this.$lightbox.find('.lb-canvas').height('auto');
     };
 
     // Show overlay and lightbox. If the image is part of a set, add siblings to album array.
@@ -225,8 +227,8 @@
 
 	    if (self.album[imageNumber].panoType != null)
 	    {
-	    	preloader.width = self.options.panoWidth;
-	      	preloader.height = self.options.panoHeight;
+	    	preloader.width = self.panoWidth;
+	      	preloader.height = self.panoHeight;
 	     }
 
         $image.width(preloader.width);
@@ -330,18 +332,18 @@
       this.preloadNeighboringImages();
       this.enableKeyboardNav();
       
-      this.$lightbox.find('.lb-canvas')[0].width = panoWidth;
-	  this.$lightbox.find('.lb-canvas')[0].height = panoHeight;
+      this.$lightbox.find('.lb-canvas').get(0).width = panoWidth;
+	  this.$lightbox.find('.lb-canvas').get(0).height = panoHeight;
 	      
       if (this.panoObject == null)
       {
 	      this.panoObject = new Pano();
-    	  this.panoObject.init(this.$lightbox.find('.lb-canvas')[0]);
+    	  this.panoObject.init(this.$lightbox.find('.lb-canvas').get(0));
       }
       this.panoObject.setSize(panoWidth, panoHeight);
       
       var $image = this.$lightbox.find('.lb-image');
-      this.panoObject.setImage($image[0]);
+      this.panoObject.setImage($image.get(0));
       
     };
 

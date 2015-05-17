@@ -8,7 +8,6 @@ function Sphere (gl)
 	var tri_s = [];
 	var tex_s = [];
 	
-	var size = 512.0;
 	var x, y;
 	var v = 0;
 	for (y = 0; y < 32; y++)
@@ -20,9 +19,9 @@ function Sphere (gl)
 			var px = Math.sin(x * 2.0*Math.PI/31.0);
 			var pz = Math.cos(x * 2.0*Math.PI/31.0);
 			
-			vertices_s[v*3+0] = px*rad * size;
-			vertices_s[v*3+1] = py * size;
-			vertices_s[v*3+2] = pz*rad * size;
+			vertices_s[v*3+0] = px*rad;
+			vertices_s[v*3+1] = py;
+			vertices_s[v*3+2] = pz*rad;
 			
 			colors_s[v*4+0] = (px+1.0)*0.5;
 			colors_s[v*4+1] = (py+1.0)*0.5;
@@ -67,7 +66,6 @@ function Sphere (gl)
   	this.uvBuffer.itemSize = 2;
 	this.uvBuffer.numItems = 32*32;
 	
-	// Triangles
 	this.triangles = gl.createBuffer();
 	this.gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.triangles);
 	this.gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(tri_s), this.gl.STATIC_DRAW);
@@ -76,16 +74,12 @@ function Sphere (gl)
 
 Sphere.prototype.draw = function( shaderPgm )
 {	
-	// Vertex positions 
 	this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.vertexBuffer);
 	this.gl.vertexAttribPointer(shaderPgm.vertexPositionAttribute, this.vertexBuffer.itemSize, this.gl.FLOAT, false, 0, 0);
-
 
   	this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.uvBuffer);
   	this.gl.vertexAttribPointer(shaderPgm.textureCoordAttribute, 2, this.gl.FLOAT, false, 0, 0);
 
-	
-	// Draw elements
 	this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, this.triangles);
 	this.gl.drawElements(this.gl.TRIANGLES, this.triangles.numItems, this.gl.UNSIGNED_SHORT, 0);
 }

@@ -38,7 +38,8 @@ body:after {
 
 .lightbox .lb-canvas {
   display: block;
-  height: auto;
+  width: 800px;
+  height: 600px;
   max-width: inherit;
   -webkit-border-radius: 3px;
   -moz-border-radius: 3px;

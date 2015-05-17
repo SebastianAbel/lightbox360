@@ -46,6 +46,7 @@ Pano.prototype.setImage = function(image)
 	var textureLoader = new TextureLoader(this.gl);
 	textureLoader.initTextureFromImage(image, function(texture) {
 		self.texture = texture;
+		self.inputHandler.reset();
 		self.render();
 	});
 }
@@ -75,7 +76,7 @@ Pano.prototype.render = function()
 		return;
 
 	// set perspective projection
-	mat4.perspective(this.fov, this.gl.viewportWidth / this.gl.viewportHeight, 0.1, 1000.0, this.pMatrix);
+	mat4.perspective(this.fov, this.gl.viewportWidth / this.gl.viewportHeight, 0.1, 10.0, this.pMatrix);
 
 	// set viewing transformation
     this.inputHandler.setMatrix(this.mvMatrix);

@@ -94,6 +94,18 @@ function InputHandler(canvas, renderer)
 	}, true);	
 }
 
+InputHandler.prototype.reset = function()
+{
+	this.dx = 0;
+	this.dy = 0;
+	
+	this.angleX = 0;
+	this.angleY = 0;
+	
+	this.rotateMat = mat4.create();
+	mat4.identity(this.rotateMat);
+}
+
 InputHandler.prototype.setFov = function(fov)
 {
 	this.fov = fov;
