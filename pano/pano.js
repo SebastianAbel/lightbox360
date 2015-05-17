@@ -28,11 +28,16 @@ Pano.prototype.init = function(canvas) {
 	this.inputHandler.setFov(this.fov);
 	this.sphere = new Sphere(this.gl, 32, 32);
 	
-	var shaderLoader = new ShaderLoader(this.gl, "pano/shader/unlit_texture.vs", "pano/shader/unlit_texture.fs");
+	var shaderLoader = new ShaderLoader(this.gl, "shaders/unlit_texture.vs", "shaders/unlit_texture.fs");
 	shaderLoader.loadShaders(function() {
 		self.shaderProgram = shaderLoader.initShaders();
 		self.render();
 	});
+}
+
+Pano.prototype.isAvailable = function()
+{
+	return this.available;
 }
 
 Pano.prototype.setSize = function(width, height)
@@ -95,3 +100,9 @@ Pano.prototype.render = function()
 	
 	this.sphere.draw(this.shaderProgram);
 }
+
+window['Pano'] = Pano; // <-- Constructor
+Pano.prototype['isAvailable'] = Pano.prototype.isAvailable;
+Pano.prototype['init'] = Pano.prototype.init;
+Pano.prototype['setSize'] = Pano.prototype.setSize;
+Pano.prototype['setImage'] = Pano.prototype.setImage;

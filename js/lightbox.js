@@ -232,7 +232,7 @@
 				self.panoObject = new Pano();
 		    	self.panoObject.init(self.$lightbox.find('.lb-canvas').get(0));
 		    }
-		    if (self.panoObject.available)
+		    if (self.panoObject.isAvailable())
 		    {
 	    		preloader.width = self.panoWidth;
 	      		preloader.height = self.panoHeight;
@@ -296,7 +296,7 @@
         self.$lightbox.find('.lb-prevLink').height(newHeight);
         self.$lightbox.find('.lb-nextLink').height(newHeight);
         
-        if ((self.album[self.currentImageIndex].panoType != null) && (self.panoObject.available))
+        if ((self.album[self.currentImageIndex].panoType != null) && (self.panoObject.isAvailable()))
       	{
         	self.showPano(imageWidth, imageHeight);
       	}
