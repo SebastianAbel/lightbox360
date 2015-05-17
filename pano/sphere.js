@@ -1,11 +1,7 @@
 
-function Sphere (gl) 
+function Sphere (gl, segments_h, segments_v) 
 {
 	this.gl = gl;
-	
-	var segments_h = 32;
-	var segments_v = 32;
-	
 	
 	var vertices_s = [];
 	var colors_s = [];

@@ -23,7 +23,7 @@ Pano.prototype.init = function(canvas) {
 
 	this.inputHandler  = new InputHandler(canvas, this); 
 	this.inputHandler.setFov(this.fov);
-	this.sphere = new Sphere(this.gl);
+	this.sphere = new Sphere(this.gl, 32, 32);
 	
 	var shaderLoader = new ShaderLoader(this.gl, "pano/shader/unlit_texture.vs", "pano/shader/unlit_texture.fs");
 	shaderLoader.loadShaders(function() {
