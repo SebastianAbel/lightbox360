@@ -8,7 +8,6 @@ java -jar ../closure-compiler/compiler.jar \
 --js ./pano/file_loader.js \
 --js ./pano/texture_loader.js \
 --js ./pano/input_handler.js \
---js ./pano/fullscreen.js \
 --externs ./js/gl-matrix.js \
 --js_output_file ./js/pano.cjs
 

@@ -58,7 +58,7 @@
     // Attach event handlers to the new DOM elements. click click click
     Lightbox.prototype.build = function() {
       var self = this;
-      $("<div id='lightboxOverlay' class='lightboxOverlay'></div><div id='lightbox' class='lightbox'><div class='lb-outerContainer'><div class='lb-container'><canvas id='pano-canvas' class='lb-canvas' /><img class='lb-image' src='' /><div class='lb-nav'><a class='lb-prev' href='' ></a><a class='lb-next' href='' ></a></div><div class='lb-pano_nav'><a class='lb-pano_prev' href='' ></a><a class='lb-pano_next' href='' ></a><a class='lb-pano_full' href='' ></a></div><div class='lb-loader'><a class='lb-cancel'></a></div></div></div><div class='lb-dataContainer'><div class='lb-data'><div class='lb-details'><span class='lb-caption'></span><span class='lb-number'></span></div><div class='lb-closeContainer'><a class='lb-close'></a></div></div></div></div>").appendTo($('body'));
+      $("<div id='lightboxOverlay' class='lightboxOverlay'></div><div id='lightbox' class='lightbox'><div class='lb-outerContainer'><div class='lb-container'><canvas id='pano-canvas' class='lb-canvas' /><img class='lb-image' src='' /><div class='lb-nav'><a class='lb-prev' href='' ></a><a class='lb-next' href='' ></a></div><div class='lb-pano_nav'><a class='lb-pano_prev' href='' ></a><a class='lb-pano_next' href='' ></a></div><div class='lb-pano_control'><a class='lb-pano_full' href='' ></a><a class='lb-pano_full_back' href='' ></a></div><div class='lb-loader'><a class='lb-cancel'></a></div></div></div><div class='lb-dataContainer'><div class='lb-data'><div class='lb-details'><span class='lb-caption'></span><span class='lb-number'></span></div><div class='lb-closeContainer'><a class='lb-close'></a></div></div></div></div>").appendTo($('body'));
       
       // Cache jQuery objects
       this.$lightbox       = $('#lightbox');
@@ -130,6 +130,16 @@
 
       this.$lightbox.find('.lb-loader, .lb-close').on('click', function() {
         self.end();
+        return false;
+      });
+      
+      this.$lightbox.find('.lb-pano_full').on('click', function() {
+        self.panoFullscreen();
+        return false;
+      });
+      
+      this.$lightbox.find('.lb-pano_full_back').on('click', function() {
+        self.panoFullscreenBack();
         return false;
       });
       
@@ -214,7 +224,7 @@
 
       $('.lb-loader').fadeIn('slow');
       this.$lightbox.find('.lb-image, .lb-nav, .lb-prev, .lb-next, .lb-dataContainer, .lb-numbers, .lb-caption').hide();
-      this.$lightbox.find('.lb-canvas, .lb-pano_nav, .lb-pano_prev, .lb-pano_next, .lb-pano_full').hide();
+      this.$lightbox.find('.lb-canvas, .lb-pano_nav, .lb-pano_prev, .lb-pano_next, .lb-pano_control, .lb-pano_full, .lb-pano_full_back').hide();
 
       this.$outerContainer.addClass('animating');
 
@@ -305,6 +315,16 @@
       	{
       		self.showImage();
       	}
+      }
+      
+      if (this.topChanged)
+      {
+      	this.$lightbox.addClass('animating');
+			var top  = $(window).scrollTop() + this.options.positionFromTop;
+      		this.$lightbox.animate({top: top + 'px'}, this.options.resizeDuration, 'swing', function() {
+         		self.$lightbox.removeClass('animating');
+         		self.topChanged = false;
+        	});
       }
 
       if (oldWidth !== newWidth || oldHeight !== newHeight) {
@@ -403,7 +423,8 @@
       } catch (e) {}
 	  */
       this.$lightbox.find('.lb-pano_nav').show();
-	  //this.$lightbox.find('.lb-pano_full').show();
+      this.$lightbox.find('.lb-pano_control').show();
+	  this.$lightbox.find('.lb-pano_full').show();
       this.$lightbox.find('.lb-pano_full').css('opacity', '1');
       
       if (this.album.length > 1) {
@@ -511,7 +532,92 @@
         visibility: "visible"
       });
     };
+    
+    
+   
+    Lightbox.prototype.panoFullscreen = function() {
+      var self = this;
+      if (this.panoObject != null)
+      {
+      	if (!this.panoObject.fullscreen())
+      	{
+      		self.$lightbox.find('.lb-pano_full').hide();
+      		
+      		$('body').css({overflow: "hidden"});
+      		this.$lightbox.addClass('animating');
+      		      		
+			var top = $(window).scrollTop();
+			this.topChanged = true;
+      		this.$lightbox.animate({top: top + 'px'}, this.options.resizeDuration, 'swing', function() {
+         		self.$lightbox.removeClass('animating');
+        	});
+        	
+        	var xDiff = self.$outerContainer.width() - self.$container.width();
+        	var yDiff = self.$outerContainer.height() - self.$container.height();
+        	
+        	var fitSizeInterval = setInterval(function() {
+				var w = self.$outerContainer.width() - xDiff;
+				var h = self.$outerContainer.height() - yDiff;
+				self.panoObject.setSize(w, h);
+			}, 1000.0/60.0); 
+        	
+        	this.outerContainerFullBackWidth = self.$outerContainer.width();
+        	this.outerContainerFullBackHeight = self.$outerContainer.height();
+        	
+			this.$outerContainer.addClass('animating');
+			this.$outerContainer.animate({width: window.innerWidth, height: window.innerHeight}, this.options.resizeDuration, 'swing', function() 			{
+         		self.$outerContainer.removeClass('animating');
+         		clearInterval(fitSizeInterval);
+				self.panoObject.setSize(self.$outerContainer.width() - xDiff, self.$outerContainer.height() - yDiff);
+				
+				self.$lightbox.find('.lb-pano_full_back').show();
+			    self.$lightbox.find('.lb-pano_full_back').css('opacity', '1');
+        	});          	
+      	}
+      }
+    };
 
+
+	Lightbox.prototype.panoFullscreenBack = function() {
+      var self = this;
+      if (this.panoObject != null)
+      {
+      	if (!this.panoObject.fullscreen())
+      	{
+      		self.$lightbox.find('.lb-pano_full_back').hide();
+	
+      		this.$lightbox.addClass('animating');
+			var top  = $(window).scrollTop() + this.options.positionFromTop;
+      		this.$lightbox.animate({top: top + 'px'}, this.options.resizeDuration, 'swing', function() {
+         		self.$lightbox.removeClass('animating');
+         		self.topChanged = false;
+        	});
+        	
+        	var xDiff = self.$outerContainer.width() - self.$container.width();
+        	var yDiff = self.$outerContainer.height() - self.$container.height();
+        	
+        	var fitSizeInterval = setInterval(function() {
+				var w = self.$outerContainer.width() - xDiff;
+				var h = self.$outerContainer.height() - yDiff;
+				self.panoObject.setSize(w, h);
+			}, 1000.0/60.0); 
+        	
+        	
+			this.$outerContainer.addClass('animating');
+			this.$outerContainer.animate({width: this.outerContainerFullBackWidth, height: this.outerContainerFullBackHeight}, this.options.resizeDuration, 'swing', function() 			{
+         		self.$outerContainer.removeClass('animating');
+         		clearInterval(fitSizeInterval);
+				self.panoObject.setSize(self.$outerContainer.width() - xDiff, self.$outerContainer.height() - yDiff);
+				
+				self.$lightbox.find('.lb-pano_full').show();
+			    self.$lightbox.find('.lb-pano_full').css('opacity', '1');
+			    
+			    $('body').css({overflow: "auto"});
+        	});          	
+      	}
+      }
+    };
+    
     return Lightbox;
 
   })();

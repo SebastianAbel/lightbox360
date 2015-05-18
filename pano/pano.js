@@ -9,7 +9,8 @@ function Pano() {
 
 Pano.prototype.init = function(canvas) {	
 	var self = this;
-	this.available = true;
+	
+	this.canvas = canvas;
 	try {
 		this.gl = canvas.getContext("experimental-webgl");	// gl = canvas.getContext("webgl");
 		this.setSize(canvas.width, canvas.height);
@@ -17,6 +18,9 @@ Pano.prototype.init = function(canvas) {
 		this.available = false;
 		return;
 	}
+	
+	this.available = true;
+	
 	
 	// global gl-settings
 	this.gl.clearColor(1.0, 0.0, 1.0, 1.0);
@@ -42,8 +46,21 @@ Pano.prototype.isAvailable = function()
 
 Pano.prototype.setSize = function(width, height)
 {
+	this.width = width;
+	this.height = height;
+	
+	this.canvas.width = width;
+	this.canvas.height = height;
+				
 	this.gl.viewportWidth = width
 	this.gl.viewportHeight = height;
+	
+	this.fov = (this.inFov * (100.0/100.0)) * (this.gl.viewportHeight/this.gl.viewportWidth);
+	if (this.inputHandler != null)
+	{
+		this.inputHandler.setFov(this.fov);
+	}
+	this.render();
 }
 
 Pano.prototype.setImage = function(image)
@@ -101,8 +118,63 @@ Pano.prototype.render = function()
 	this.sphere.draw(this.shaderProgram);
 }
 
+Pano.prototype.fullscreen = function()
+{
+	var self = this;
+	var setToFull = false;
+	/*
+	if (!document.fullscreenElement &&    // alternative standard method
+      	!document.mozFullScreenElement && !document.webkitFullscreenElement && !document.msFullscreenElement )
+   	{  
+      	// current working methods
+      
+      
+	    if (this.canvas.requestFullscreen)
+	    {
+	    	this.canvas.requestFullscreen();
+	    	setToFull = true;
+	    }
+	    else if (this.canvas.msRequestFullscreen)
+	    {
+	    	this.canvas.msRequestFullscreen();
+	    	setToFull = true;
+	    }
+	    else if (this.canvas.mozRequestFullScreen)
+	    {
+	    	this.canvas.mozRequestFullScreen();
+	    	setToFull = true;
+	    }
+	    else if (this.canvas.webkitRequestFullscreen)
+	    {
+	    	this.canvas.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT);
+	    	setToFull = true;
+	    }
+   
+	  	var normalWidth = this.width;
+	  	var normalHeight = this.height;
+	  	
+	  	this.setSize(window.innerWidth, window.innerHeight);
+		if (setToFull)
+		{
+			var fsCheck = setInterval(function() {
+				if (!document.fullscreenElement &&    // alternative standard method
+		     		!document.mozFullScreenElement && !document.webkitFullscreenElement && !document.msFullscreenElement )
+		  			{		
+			   		self.setSize(normalWidth, normalHeight);
+					clearInterval(fsCheck);
+					self.render(); 
+		  			}
+			}, 1000.0/30.0);
+		}
+		this.render();    
+   	}
+   	*/
+   	return setToFull;
+}
+
 window['Pano'] = Pano; // <-- Constructor
 Pano.prototype['isAvailable'] = Pano.prototype.isAvailable;
 Pano.prototype['init'] = Pano.prototype.init;
 Pano.prototype['setSize'] = Pano.prototype.setSize;
 Pano.prototype['setImage'] = Pano.prototype.setImage;
+Pano.prototype['fullscreen'] = Pano.prototype.fullscreen;
