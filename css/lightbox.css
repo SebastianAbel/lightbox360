@@ -117,7 +117,6 @@ body:after {
   position: absolute;
   top: 0;
   right: 0;
-  height: 64px;
   width: 64px;
   z-index: 10;
 }
@@ -147,7 +146,7 @@ body:after {
   display: block;
 }
 
-.lb-pano_prev, .lb-pano_next, .lb-pano_full, .lb-pano_full_back {
+.lb-pano_prev, .lb-pano_next, .lb-pano_full, .lb-pano_full_back, .lb-pano_zoom {
   height: 100%;
   cursor: pointer;
   display: block;
@@ -230,6 +229,7 @@ body:after {
 .lb-pano_control a.lb-pano_full {
   width: 64px;
   right: 0;
+  height: 64px;
   float: right;
   background: url(../img/full.png) 48% no-repeat;
   filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0);
@@ -245,10 +245,21 @@ body:after {
   opacity: 1;
 }
 
+.lb-pano_control input.lb-pano_zoom {
+   position: relative;
+   height: 64px;
+   width: 64px;
+   -webkit-transform: rotate(270deg);       
+   -moz-transform: rotate(270deg);
+   -o-transform: rotate(270deg);
+   -ms-transform: rotate(270deg);
+   transform: rotate(270deg);
+}
 
 .lb-pano_control a.lb-pano_full_back {
   width: 64px;
   right: 0;
+  height: 64px;
   float: right;
   background: url(../img/full_back.png) 48% no-repeat;
   filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0);

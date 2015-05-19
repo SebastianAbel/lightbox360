@@ -1,5 +1,8 @@
 function Pano() {	
-	this.inFov = 30.0 + ((1.0 - 40/100.0) * 90.0);
+	
+	this.fovScaleDefault = 40.0;
+	
+	this.inFov = 30.0 + ((1.0 - this.fovScaleDefault/100.0) * 90.0);
 	this.fov = this.inFov;
 	
 	this.mvMatrix = mat4.create();
@@ -20,7 +23,6 @@ Pano.prototype.init = function(canvas) {
 	}
 	
 	this.available = true;
-	
 	
 	// global gl-settings
 	this.gl.clearColor(1.0, 0.0, 1.0, 1.0);
@@ -68,21 +70,29 @@ Pano.prototype.setImage = function(image)
 	var self = this;
 	this.texture = null;
 	
+	this.setFovScale(this.fovScaleDefault);
+	this.inputHandler.setFov(this.fov);
+	self.inputHandler.reset();
+	
 	var textureLoader = new TextureLoader(this.gl);
 	textureLoader.initTextureFromImage(image, function(texture) {
 		self.texture = texture;
-		self.inputHandler.reset();
 		self.render();
 	});
 }
 
 
-Pano.prototype.setFov = function(v)
+Pano.prototype.setFovScale = function(v)
 {
 	this.inFov = 30.0 + ((1.0 - v/100.0) * 90.0);
 	this.fov = (this.inFov * (100.0/100.0)) * (this.gl.viewportHeight/this.gl.viewportWidth);
 	this.inputHandler.setFov(this.fov);
 	this.render();
+}
+
+Pano.prototype.getFovScale = function()
+{
+	return ((this.inFov - 30.0)/90.0 - 1.0) * -100.0;
 }
 
 
@@ -178,3 +188,5 @@ Pano.prototype['init'] = Pano.prototype.init;
 Pano.prototype['setSize'] = Pano.prototype.setSize;
 Pano.prototype['setImage'] = Pano.prototype.setImage;
 Pano.prototype['fullscreen'] = Pano.prototype.fullscreen;
+Pano.prototype['setFovScale'] = Pano.prototype.setFovScale;
+Pano.prototype['getFovScale'] = Pano.prototype.getFovScale;
