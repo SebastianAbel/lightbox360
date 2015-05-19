@@ -146,7 +146,7 @@ body:after {
   display: block;
 }
 
-.lb-pano_prev, .lb-pano_next, .lb-pano_full, .lb-pano_full_back, .lb-pano_zoom {
+.lb-pano_prev, .lb-pano_next, .lb-pano_full, .lb-pano_full_back, .lb-pano_zoom, .lb-pano_play, .lb-pano_pause {
   height: 100%;
   cursor: pointer;
   display: block;
@@ -191,7 +191,7 @@ body:after {
 }
 
 .lb-nav a.lb-next {
-  width: 64%;
+  width: 34%;
   right: 0;
   float: right;
   background: url(../img/next.png) right 48% no-repeat;
@@ -222,6 +222,45 @@ body:after {
 }
 
 .lb-pano_nav a.lb-pano_next:hover {
+  filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=100);
+  opacity: 1;
+}
+
+
+.lb-pano_nav a.lb-pano_play {
+  position: relative;
+  width: 64px;
+  left: 0;
+  float: left;
+  background: url(../img/play.png) right 48% no-repeat;
+  filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0);
+  opacity: 0;
+  -webkit-transition: opacity 0.6s;
+  -moz-transition: opacity 0.6s;
+  -o-transition: opacity 0.6s;
+  transition: opacity 0.6s;
+}
+
+.lb-pano_nav a.lb-pano_play:hover {
+  filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=100);
+  opacity: 1;
+}
+
+.lb-pano_nav a.lb-pano_pause {
+  position: relative;
+  width: 64px;
+  left: 0;
+  float: left;
+  background: url(../img/pause.png) right 48% no-repeat;
+  filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0);
+  opacity: 0;
+  -webkit-transition: opacity 0.6s;
+  -moz-transition: opacity 0.6s;
+  -o-transition: opacity 0.6s;
+  transition: opacity 0.6s;
+}
+
+.lb-pano_nav a.lb-pano_pause:hover {
   filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=100);
   opacity: 1;
 }

@@ -33,15 +33,39 @@ TextureLoader.prototype.initTextureFromVideo = function(video, fps, callback) {
 
 	this.$videoElement.attr('src', video);
 	this.$videoElement.attr('loop', true);
-	this.$videoElement.get(0).play();
+	//this.$videoElement.get(0).play();
+	this.playing = false;
 	
 	this.videoUpdate = setInterval(function() {
 		src = self.$videoElement.get(0);
 		self.handleTextureLoaded (src, texture, callback);
 	}
-	, 1000.0/fps);
-	
+	, 1000.0/fps);	
 }
+
+
+TextureLoader.prototype.play = function() {
+	if (this.videoUpdate != null)
+	{
+		this.$videoElement.get(0).play();
+		this.playing = true;
+	}
+}
+
+
+TextureLoader.prototype.pause = function() {
+	if (this.videoUpdate != null)
+	{
+		this.$videoElement.get(0).pause();
+		this.playing = false;
+	}
+}
+
+
+TextureLoader.prototype.isPlaying = function() {
+	return this.videoUpdate != null && this.playing;
+}
+
 
 TextureLoader.prototype.stopTextureFromVideo = function(video, callback) {
 	if (this.videoUpdate != null)
@@ -51,6 +75,8 @@ TextureLoader.prototype.stopTextureFromVideo = function(video, callback) {
 		
 		this.$videoElement.get(0).pause();
 		this.$videoElement.attr('src', null);
+		
+		this.playing = false;
 	}
 }
 

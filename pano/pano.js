@@ -70,6 +70,7 @@ Pano.prototype.setImage = function(image)
 {
 	var self = this;
 	this.texture = null;
+	this.video = false;
 	
 	this.setFovScale(this.fovScaleDefault);
 	this.inputHandler.setFov(this.fov);
@@ -87,6 +88,7 @@ Pano.prototype.setVideo = function(video, fps)
 	
 	var self = this;
 	this.texture = null;
+	this.video = true;
 	
 	this.setFovScale(this.fovScaleDefault);
 	this.inputHandler.setFov(this.fov);
@@ -108,6 +110,20 @@ Pano.prototype.clearVideo = function()
 	this.textureLoader.stopTextureFromVideo();
 }
 
+Pano.prototype.playVideo = function()
+{
+	this.textureLoader.play();
+}
+
+Pano.prototype.pauseVideo = function()
+{
+	this.textureLoader.pause();
+}
+
+Pano.prototype.isVideoPlaying = function()
+{
+	return this.textureLoader.isPlaying();
+}
 
 Pano.prototype.setFovScale = function(v)
 {
@@ -220,3 +236,6 @@ Pano.prototype['getFovScale'] = Pano.prototype.getFovScale;
 Pano.prototype['setVideo'] = Pano.prototype.setVideo;
 Pano.prototype['hasVideo'] = Pano.prototype.hasVideo;
 Pano.prototype['clearVideo'] = Pano.prototype.clearVideo;
+Pano.prototype['playVideo'] = Pano.prototype.playVideo;
+Pano.prototype['pauseVideo'] = Pano.prototype.pauseVideo;
+Pano.prototype['isVideoPlaying'] = Pano.prototype.isVideoPlaying;

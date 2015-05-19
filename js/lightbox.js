@@ -58,7 +58,7 @@
     // Attach event handlers to the new DOM elements. click click click
     Lightbox.prototype.build = function() {
       var self = this;
-      $("<div id='lightboxOverlay' class='lightboxOverlay'></div><div id='lightbox' class='lightbox'><div class='lb-outerContainer'><div class='lb-container'><canvas id='pano-canvas' class='lb-canvas' /><img class='lb-image' src='' /><div class='lb-nav'><a class='lb-prev' href='' ></a><a class='lb-next' href='' ></a></div><div class='lb-pano_nav'><a class='lb-pano_prev' href='' ></a><a class='lb-pano_next' href='' ></a></div><div class='lb-pano_control'><a class='lb-pano_full' href='' ></a><a class='lb-pano_full_back' href='' ></a><input type=range class='lb-pano_zoom' min=0 value=40 max=100 /></div><div class='lb-loader'><a class='lb-cancel'></a></div></div></div><div class='lb-dataContainer'><div class='lb-data'><div class='lb-details'><span class='lb-caption'></span><span class='lb-number'></span></div><div class='lb-closeContainer'><a class='lb-close'></a></div></div></div></div>").appendTo($('body'));
+      $("<div id='lightboxOverlay' class='lightboxOverlay'></div><div id='lightbox' class='lightbox'><div class='lb-outerContainer'><div class='lb-container'><canvas id='pano-canvas' class='lb-canvas' /><img class='lb-image' src='' /><div class='lb-nav'><a class='lb-prev' href='' ></a><a class='lb-next' href='' ></a></div><div class='lb-pano_nav'><a class='lb-pano_prev' href='' ></a><a class='lb-pano_play' href='' ></a><a class='lb-pano_pause' href='' ></a><a class='lb-pano_next' href='' ></a></div><div class='lb-pano_control'><a class='lb-pano_full' href='' ></a><a class='lb-pano_full_back' href='' ></a><input type=range class='lb-pano_zoom' min=0 value=40 max=100 /></div><div class='lb-loader'><a class='lb-cancel'></a></div></div></div><div class='lb-dataContainer'><div class='lb-data'><div class='lb-details'><span class='lb-caption'></span><span class='lb-number'></span></div><div class='lb-closeContainer'><a class='lb-close'></a></div></div></div></div>").appendTo($('body'));
       
       // Cache jQuery objects
       this.$lightbox       = $('#lightbox');
@@ -148,6 +148,16 @@
         return false;
       });
       
+      this.$lightbox.find('.lb-pano_play').on('click', function() {
+        self.panoPlay();
+        return false;
+      });
+      
+      this.$lightbox.find('.lb-pano_pause').on('click', function() {
+        self.panoPause();
+        return false;
+      });
+      
       this.panoWidth = this.$lightbox.find('.lb-canvas').width();
       this.panoHeight = this.$lightbox.find('.lb-canvas').height();
       this.$lightbox.find('.lb-canvas').width('auto');
@@ -230,7 +240,7 @@
 
       $('.lb-loader').fadeIn('slow');
       this.$lightbox.find('.lb-image, .lb-nav, .lb-prev, .lb-next, .lb-dataContainer, .lb-numbers, .lb-caption').hide();
-      this.$lightbox.find('.lb-canvas, .lb-pano_nav, .lb-pano_prev, .lb-pano_next, .lb-pano_control, .lb-pano_full, .lb-pano_full_back').hide();
+      this.$lightbox.find('.lb-canvas, .lb-pano_nav, .lb-pano_prev, .lb-pano_next, .lb-pano_control, .lb-pano_full, .lb-pano_full_back, .lb-pano_play, .lb-pano_pause').hide();
 
       this.$outerContainer.addClass('animating');
 
@@ -502,6 +512,13 @@
       this.$lightbox.find('.lb-pano_full').css('opacity', '1');
       this.$lightbox.find('.lb-pano_zoom').show();
       
+      if (this.album[this.currentImageIndex].panoType == "sphere-video")
+      {
+	      this.$lightbox.find('.lb-pano_play').show();
+	      this.$lightbox.find('.lb-pano_play').css('opacity', '1');
+	      this.$lightbox.find('.lb-pano_pause').hide();
+	      this.$lightbox.find('.lb-pano_pause').css('opacity', '1');
+      }            
       if (this.album.length > 1) {
         if (this.options.wrapAround) {
           if (alwaysShowNav) {
@@ -712,6 +729,28 @@
       	this.panoObject.setFovScale(zoom);
       }
     }
+    
+    Lightbox.prototype.panoPlay = function() {
+    	
+      if (this.panoObject != null)
+      {
+      	this.$lightbox.find('.lb-pano_play').hide();
+      	this.$lightbox.find('.lb-pano_pause').show();
+      	this.panoObject.playVideo();
+      }
+    }
+    
+    Lightbox.prototype.panoPause = function() {
+    	
+      if (this.panoObject != null)
+      {
+      	this.$lightbox.find('.lb-pano_pause').hide();
+      	this.$lightbox.find('.lb-pano_play').show();
+      	this.panoObject.pauseVideo();
+      }
+    }
+    
+    
     return Lightbox;
 
   })();
