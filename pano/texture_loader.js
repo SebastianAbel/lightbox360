@@ -33,7 +33,6 @@ TextureLoader.prototype.initTextureFromVideo = function(video, fps, callback) {
 
 	this.$videoElement.attr('src', video);
 	this.$videoElement.attr('loop', true);
-	//this.$videoElement.get(0).play();
 	this.playing = false;
 	
 	this.videoUpdate = setInterval(function() {
@@ -63,7 +62,7 @@ TextureLoader.prototype.pause = function() {
 
 
 TextureLoader.prototype.isPlaying = function() {
-	return this.videoUpdate != null && this.playing;
+	return (this.videoUpdate != null) && (this.playing);
 }
 
 
