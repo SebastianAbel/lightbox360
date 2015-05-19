@@ -30,6 +30,7 @@ Pano.prototype.init = function(canvas) {
 	
 	this.fov = (this.inFov * (100.0/100.0)) * (this.gl.viewportHeight/this.gl.viewportWidth);
 
+	this.textureLoader = new TextureLoader(this.gl);
 	this.inputHandler  = new InputHandler(canvas, this); 
 	this.inputHandler.setFov(this.fov);
 	this.sphere = new Sphere(this.gl, 32, 32);
@@ -74,11 +75,37 @@ Pano.prototype.setImage = function(image)
 	this.inputHandler.setFov(this.fov);
 	self.inputHandler.reset();
 	
-	var textureLoader = new TextureLoader(this.gl);
-	textureLoader.initTextureFromImage(image, function(texture) {
+	this.textureLoader.initTextureFromImage(image, function(texture) {
 		self.texture = texture;
 		self.render();
 	});
+}
+
+Pano.prototype.setVideo = function(video, fps)
+{
+	fps = typeof fps !== 'undefined' ? fps : 15;
+	
+	var self = this;
+	this.texture = null;
+	
+	this.setFovScale(this.fovScaleDefault);
+	this.inputHandler.setFov(this.fov);
+	self.inputHandler.reset();
+	
+	this.textureLoader.initTextureFromVideo(video, fps, function(texture) {
+		self.texture = texture;
+		self.render();
+	});
+}
+
+Pano.prototype.hasVideo = function()
+{
+	return this.textureLoader.isUpdatingVideo();
+}
+
+Pano.prototype.clearVideo = function()
+{
+	this.textureLoader.stopTextureFromVideo();
 }
 
 
@@ -190,3 +217,6 @@ Pano.prototype['setImage'] = Pano.prototype.setImage;
 Pano.prototype['fullscreen'] = Pano.prototype.fullscreen;
 Pano.prototype['setFovScale'] = Pano.prototype.setFovScale;
 Pano.prototype['getFovScale'] = Pano.prototype.getFovScale;
+Pano.prototype['setVideo'] = Pano.prototype.setVideo;
+Pano.prototype['hasVideo'] = Pano.prototype.hasVideo;
+Pano.prototype['clearVideo'] = Pano.prototype.clearVideo;

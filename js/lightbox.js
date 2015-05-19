@@ -234,61 +234,120 @@
 
       this.$outerContainer.addClass('animating');
 
-      // When image to show is preloaded, we send the width and height to sizeContainer()
-      var preloader = new Image();
-      preloader.onload = function() {
-        var $preloader, imageHeight, imageWidth, maxImageHeight, maxImageWidth, windowHeight, windowWidth;
-        $image.attr('src', self.album[imageNumber].link);
-
-        $preloader = $(preloader);
-
-	    if (self.album[imageNumber].panoType != null)
-	    {
-	    	if (self.panoObject == null)
-		    {
-				self.panoObject = new Pano();
-		    	self.panoObject.init(self.$lightbox.find('.lb-canvas').get(0));
-		    }
-		    if (self.panoObject.isAvailable())
-		    {
-	    		preloader.width = self.album[imageNumber].panoWidth != null ? self.album[imageNumber].panoWidth : self.panoWidth;
-	      		preloader.height = self.album[imageNumber].panoHeight != null ? self.album[imageNumber].panoHeight : self.panoHeight;
-		    }
-	    }
-
-        $image.width(preloader.width);
-        $image.height(preloader.height);
-        
-        
-        if (self.options.fitImagesInViewport) {
-          // Fit image inside the viewport.
-          // Take into account the border around the image and an additional 10px gutter on each side.
-
-          windowWidth    = $(window).width();
-          windowHeight   = $(window).height();
-          maxImageWidth  = windowWidth - self.containerLeftPadding - self.containerRightPadding - 20;
-          maxImageHeight = windowHeight - self.containerTopPadding - self.containerBottomPadding - 120;
-
-          // Is there a fitting issue?
-          if ((preloader.width > maxImageWidth) || (preloader.height > maxImageHeight)) {
-            if ((preloader.width / maxImageWidth) > (preloader.height / maxImageHeight)) {
-              imageWidth  = maxImageWidth;
-              imageHeight = parseInt(preloader.height / (preloader.width / imageWidth), 10);
-              $image.width(imageWidth);
-              $image.height(imageHeight);
-            } else {
-              imageHeight = maxImageHeight;
-              imageWidth = parseInt(preloader.width / (preloader.height / imageHeight), 10);
-              $image.width(imageWidth);
-              $image.height(imageHeight);
-            }
-          }
-        }
-        self.sizeContainer($image.width(), $image.height());
-      };
-
-      preloader.src          = this.album[imageNumber].link;
+	  if (this.panoObject != null)
+      {
+      	if (this.panoObject.hasVideo())
+      	{
+      		this.panoObject.clearVideo();
+      	}
+      }
       this.currentImageIndex = imageNumber;
+     
+	  if (this.album[imageNumber].panoType == "sphere-video")
+	  {
+	  	var preloader = new Image();
+	    if (this.panoObject == null)
+		{
+			this.panoObject = new Pano();
+	    	this.panoObject.init(this.$lightbox.find('.lb-canvas').get(0));
+	    }
+	    if (this.panoObject.isAvailable())
+	    {
+	    	
+	    	
+    		preloader.width = this.album[imageNumber].panoWidth != null ? this.album[imageNumber].panoWidth : this.panoWidth;
+      		preloader.height = this.album[imageNumber].panoHeight != null ? this.album[imageNumber].panoHeight : this.panoHeight;
+	    
+	    	$image.width(preloader.width);
+        	$image.height(preloader.height);
+	        
+	        if (this.options.fitImagesInViewport) {
+	          // Fit image inside the viewport.
+	          // Take into account the border around the image and an additional 10px gutter on each side.
+	
+	          windowWidth    = $(window).width();
+	          windowHeight   = $(window).height();
+	          maxImageWidth  = windowWidth - this.containerLeftPadding - this.containerRightPadding - 20;
+	          maxImageHeight = windowHeight - this.containerTopPadding - this.containerBottomPadding - 120;
+	
+	          // Is there a fitting issue?
+	          if ((preloader.width > maxImageWidth) || (preloader.height > maxImageHeight)) {
+	            if ((preloader.width / maxImageWidth) > (preloader.height / maxImageHeight)) {
+	              imageWidth  = maxImageWidth;
+	              imageHeight = parseInt(preloader.height / (preloader.width / imageWidth), 10);
+	              $image.width(imageWidth);
+	              $image.height(imageHeight);
+	            } else {
+	              imageHeight = maxImageHeight;
+	              imageWidth = parseInt(preloader.width / (preloader.height / imageHeight), 10);
+	              $image.width(imageWidth);
+	              $image.height(imageHeight);
+	            }
+	          }
+	        }
+	        this.sizeContainer($image.width(), $image.height());
+	      };
+	      preloader.src = this.album[imageNumber].link;
+	  }
+	  else
+	  {
+	  
+	      // When image to show is preloaded, we send the width and height to sizeContainer()
+	      var preloader = new Image();
+	      preloader.onload = function() {
+	        var $preloader, imageHeight, imageWidth, maxImageHeight, maxImageWidth, windowHeight, windowWidth;
+	        $image.attr('src', self.album[imageNumber].link);
+	
+	        $preloader = $(preloader);
+	
+		    if (self.album[imageNumber].panoType != null)
+		    {
+		    	if (self.panoObject == null)
+			    {
+					self.panoObject = new Pano();
+			    	self.panoObject.init(self.$lightbox.find('.lb-canvas').get(0));
+			    }
+			    if (self.panoObject.isAvailable())
+			    {
+		    		preloader.width = self.album[imageNumber].panoWidth != null ? self.album[imageNumber].panoWidth : self.panoWidth;
+		      		preloader.height = self.album[imageNumber].panoHeight != null ? self.album[imageNumber].panoHeight : self.panoHeight;
+			    }
+		    }
+	
+	        $image.width(preloader.width);
+	        $image.height(preloader.height);
+	        
+	        
+	        if (self.options.fitImagesInViewport) {
+	          // Fit image inside the viewport.
+	          // Take into account the border around the image and an additional 10px gutter on each side.
+	
+	          windowWidth    = $(window).width();
+	          windowHeight   = $(window).height();
+	          maxImageWidth  = windowWidth - self.containerLeftPadding - self.containerRightPadding - 20;
+	          maxImageHeight = windowHeight - self.containerTopPadding - self.containerBottomPadding - 120;
+	
+	          // Is there a fitting issue?
+	          if ((preloader.width > maxImageWidth) || (preloader.height > maxImageHeight)) {
+	            if ((preloader.width / maxImageWidth) > (preloader.height / maxImageHeight)) {
+	              imageWidth  = maxImageWidth;
+	              imageHeight = parseInt(preloader.height / (preloader.width / imageWidth), 10);
+	              $image.width(imageWidth);
+	              $image.height(imageHeight);
+	            } else {
+	              imageHeight = maxImageHeight;
+	              imageWidth = parseInt(preloader.width / (preloader.height / imageHeight), 10);
+	              $image.width(imageWidth);
+	              $image.height(imageHeight);
+	            }
+	          }
+	        }
+	        self.sizeContainer($image.width(), $image.height());
+	      };
+	
+	      preloader.src = this.album[imageNumber].link;
+	  }
+     
     };
 
     // Stretch overlay to fit the viewport
@@ -373,7 +432,15 @@
       this.panoObject.setSize(panoWidth, panoHeight);
       
       var $image = this.$lightbox.find('.lb-image');
-      this.panoObject.setImage($image.get(0));
+      
+      if (this.album[this.currentImageIndex].panoType == "sphere-video")
+      {
+      	this.panoObject.setVideo(this.album[this.currentImageIndex].link);
+      }
+      else
+      {
+      	this.panoObject.setImage($image.get(0));
+      }
       this.$lightbox.find('.lb-pano_zoom').val(this.panoObject.getFovScale());
       
     };
@@ -539,6 +606,14 @@
       $('select, object, embed').css({
         visibility: "visible"
       });
+      
+      if (this.panoObject != null)
+      {
+      	if (this.panoObject.hasVideo())
+      	{
+      		this.panoObject.clearVideo();
+      	}
+      }
     };
     
     

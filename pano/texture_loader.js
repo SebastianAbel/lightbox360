@@ -2,6 +2,10 @@ function TextureLoader(gl)
 {
 	this.gl = gl;
 	this.iOS = ( navigator.userAgent.match(/(iPad|iPhone|iPod)/g) ? true : false );
+	
+	this.$videoElement = $('<video></video>');
+    this.$videoElement.hide();
+
 }
 
 
@@ -23,7 +27,40 @@ TextureLoader.prototype.initTextureFromImage = function(image, callback) {
 }
 
 
-TextureLoader.prototype.handleTextureLoaded = function(image, texture, callback) {
+TextureLoader.prototype.initTextureFromVideo = function(video, fps, callback) {
+	var self = this;
+	var texture = this.gl.createTexture();
+
+	this.$videoElement.attr('src', video);
+	this.$videoElement.attr('loop', true);
+	this.$videoElement.get(0).play();
+	
+	this.videoUpdate = setInterval(function() {
+		src = self.$videoElement.get(0);
+		self.handleTextureLoaded (src, texture, callback);
+	}
+	, 1000.0/fps);
+	
+}
+
+TextureLoader.prototype.stopTextureFromVideo = function(video, callback) {
+	if (this.videoUpdate != null)
+	{
+		clearInterval(this.videoUpdate);
+		this.videoUpdate = null;
+		
+		this.$videoElement.get(0).pause();
+		this.$videoElement.attr('src', null);
+	}
+}
+
+TextureLoader.prototype.isUpdatingVideo = function()
+{
+	return (this.videoUpdate != null);
+}
+
+
+TextureLoader.prototype.handleTextureLoaded = function(src, texture, callback) {
 	function isPowerOfTwo(x) {
     	return (x & (x - 1)) == 0;
 	}
@@ -37,26 +74,27 @@ TextureLoader.prototype.handleTextureLoaded = function(image, texture, callback)
 	}
 
 	this.gl.bindTexture(this.gl.TEXTURE_2D, texture);
+	
 	if (this.iOS)
 	{
-		if (!isPowerOfTwo(image.width) || !isPowerOfTwo(image.height)) {
+		if (!isPowerOfTwo(src.width) || !isPowerOfTwo(src.height)) {
 			// Scale up the texture to the next highest power of two dimensions.
 			var canvas = document.createElement("canvas");
-			canvas.width = nextHighestPowerOfTwo(image.width);
+			canvas.width = nextHighestPowerOfTwo(src.width);
 			while (canvas.width > 2048)
 				canvas.width /= 2;
 			
-			canvas.height = nextHighestPowerOfTwo(image.height);
+			canvas.height = nextHighestPowerOfTwo(src.height);
 			while (canvas.height > 2048)
 				canvas.height /= 2;
 			
 			var ctx = canvas.getContext("2d");
-			ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
-			image = canvas;
+			ctx.drawImage(src, 0, 0, canvas.width, canvas.height);
+			src = canvas;
 		}
 	}
-	this.gl.texImage2D(this.gl.TEXTURE_2D, 0, this.gl.RGBA, this.gl.RGBA, this.gl.UNSIGNED_BYTE, image);
 	
+	this.gl.texImage2D(this.gl.TEXTURE_2D, 0, this.gl.RGBA, this.gl.RGBA, this.gl.UNSIGNED_BYTE, src);
 	this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MAG_FILTER, this.gl.LINEAR);
 	this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MIN_FILTER, this.gl.LINEAR);
 	this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_WRAP_S, this.gl.CLAMP_TO_EDGE);
