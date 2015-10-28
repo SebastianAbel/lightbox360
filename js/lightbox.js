@@ -186,7 +186,8 @@
           title: $link.attr('data-title') || $link.attr('title'),
           panoType: $link.attr('pano-type'),
           panoWidth: $link.attr('pano-width'),
-          panoHeight: $link.attr('pano-height')
+          panoHeight: $link.attr('pano-height'),
+          panoFps: $link.attr('pano-fps')
         });
       }
 
@@ -445,7 +446,7 @@
       
       if (this.album[this.currentImageIndex].panoType == "sphere-video")
       {
-      	this.panoObject.setVideo(this.album[this.currentImageIndex].link);
+      	this.panoObject.setVideo(this.album[this.currentImageIndex].link, 30);
       }
       else
       {
