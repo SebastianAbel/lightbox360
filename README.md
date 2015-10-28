@@ -1,8 +1,25 @@
 # lightbox360
 
 The lightbox script with support for sphere-panoramas.
+[Example page](http://www.rule7.de/___lightbox360/)
+
+## Credits
+
+### Lightbox
+Lokesh Dhakar 
+[lokeshdhakar.com](http://www.lokeshdhakar.com)  
+[twitter.com/lokesh](http://twitter.com/lokesh)
+
+### pano integration
+Sebastian Abel
+[rule7.de](http://www.rule7.de)  
+
+### gl-matrix
+Brandon Jones
 
 
+### Thanks
+* Daniel Sczepansky for supporting ideas and pictures
 
 
 
