@@ -8,6 +8,18 @@ function TextureLoader(gl)
 
 }
 
+TextureLoader.prototype.requestCORSIfNotSameOrigin = function(img, url) 
+{
+	if ((new URL(url)).origin !== window.location.origin) 
+	{
+		var newImg = new Image();
+    	newImg.crossOrigin = "";
+    	newImg.src = url;
+    	return newImg;
+  	}
+  	return img;
+}
+
 
 TextureLoader.prototype.initTexture = function(texturename, callback) {
 	var self = this;

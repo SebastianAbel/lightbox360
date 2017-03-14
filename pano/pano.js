@@ -76,10 +76,27 @@ Pano.prototype.setImage = function(image)
 	this.inputHandler.setFov(this.fov);
 	self.inputHandler.reset();
 	
-	this.textureLoader.initTextureFromImage(image, function(texture) {
-		self.texture = texture;
-		self.render();
-	});
+	var textureImage = this.textureLoader.requestCORSIfNotSameOrigin(image, image.src);
+	if (textureImage.naturalWidth === 0)
+	{
+		textureImage.onload = function(textureLoader, texture) 
+		{ 
+			self.textureLoader.initTextureFromImage(textureImage, function(texture)
+			{
+				self.texture = texture;
+				self.render();
+			});
+		}
+	}
+	else
+	{
+
+		this.textureLoader.initTextureFromImage(textureImage, function(texture) 
+		{
+			self.texture = texture;
+			self.render();
+		});
+	}
 }
 
 Pano.prototype.setVideo = function(video, fps)
